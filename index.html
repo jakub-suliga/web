@@ -7,6 +7,14 @@
 <body>
     <h1>Countdown bis zum 26.03.2025</h1>
     <p id="countdown"></p>
+    <style>
+        #countdown {
+            font-size: 2em;
+            color: #FF4500;
+            font-family: Arial, sans-serif;
+            text-shadow: 1px 1px #000;
+        }
+    </style>
     <script>
         const endDate = new Date("Mar 26, 2025 00:00:00").getTime();
         setInterval(() => {
