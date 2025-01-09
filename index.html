@@ -5,11 +5,21 @@
     <title>Countdown</title>
 </head>
 <body>
-    <h1>Countdown bis zum Spatzianflug</h1>
+    <h1>Countdown bis zum Zielflughafen</h1>
     <p id="countdown"></p>
 
-    <h1>Abwesenheit vom Spatzi:</h1>
+    <h1>Abwesenheit vom Spatzi (seit 1.1.25, 12:00 Uhr)</h1>
     <p id="elapsed"></p>
+
+    <h1>Flugstatus</h1>
+    <div class="flight-container">
+      <span class="airport-emoji">🛬</span>
+      <div class="flight-path">
+        <div class="airplane" id="plane">✈️</div>
+      </div>
+      <span class="airport-emoji">🛬</span>
+    </div>
+
     <style>
         #countdown {
             font-size: 2em;
@@ -23,6 +33,27 @@
             font-family: Arial, sans-serif;
             text-shadow: 1px 1px #000;
         }
+        .flight-container {
+          display: flex;
+          align-items: center;
+          justify-content: space-around;
+          margin: 1em 0;
+        }
+        .flight-path {
+          position: relative;
+          flex: 1;
+          border-bottom: 2px dashed gray;
+          margin: 0 1em;
+          height: 0;
+        }
+        .airplane {
+          position: absolute;
+          bottom: 0.5em;
+          left: 0%;
+          transform: translateX(-50%);
+          transition: left 0.5s;
+          font-size: 1.5em;
+        }
     </style>
     <script>
         const startDate = new Date("Jan 1, 2025 12:00:00").getTime();
@@ -31,7 +62,7 @@
         function updateTimers() {
             const now = new Date().getTime();
             
-            // Countdown
+            // Countdown zum Zielflughafen
             const distance = endDate - now;
             if (distance >= 0) {
                 const days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -42,7 +73,7 @@
                     days + "T " + hours + "h " + minutes + "m " + seconds + "s ";
             }
 
-            // Vergangene Zeit seit Startdatum
+            // Vergangene Zeit seit Spatzi-Startdatum
             const elapsed = now - startDate;
             if (elapsed >= 0) {
                 const daysPassed = Math.floor(elapsed / (1000 * 60 * 60 * 24));
@@ -58,6 +89,20 @@
         updateTimers();
         // Alle 1 Sekunde aktualisieren
         setInterval(updateTimers, 1000);
+
+        const startTS = new Date("Jan 1, 2025 12:00:00").getTime();
+        const endTS   = new Date("Mar 26, 2025 06:30:00").getTime();
+        function movePlane() {
+          const now = new Date().getTime();
+          const total = endTS - startTS;
+          const elapsed = now - startTS;
+          let progress = (elapsed / total) * 100;
+          if (progress < 0) progress = 0;
+          if (progress > 100) progress = 100;
+          document.getElementById("plane").style.left = progress + "%";
+        }
+        movePlane();
+        setInterval(movePlane, 1000);
     </script>
 </body>
 </html>
