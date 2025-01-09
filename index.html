@@ -7,6 +7,9 @@
 <body>
     <h1>Countdown bis zum Spatzianflug</h1>
     <p id="countdown"></p>
+
+    <h1>Abwesenheit vom Spatzi:</h1>
+    <p id="elapsed"></p>
     <style>
         #countdown {
             font-size: 2em;
@@ -14,23 +17,48 @@
             font-family: Arial, sans-serif;
             text-shadow: 1px 1px #000;
         }
+        #elapsed {
+            font-size: 2em;
+            color: #008000;
+            font-family: Arial, sans-serif;
+            text-shadow: 1px 1px #000;
+        }
     </style>
     <script>
-        const endDate = new Date("Mar 26, 2025 00:00:00").getTime();
-        setInterval(() => {
+        const startDate = new Date("Jan 1, 2025 12:00:00").getTime();
+        const endDate = new Date("Mar 26, 2025 06:30:00").getTime();
+        
+        function updateTimers() {
             const now = new Date().getTime();
+            
+            // Countdown
             const distance = endDate - now;
             if (distance >= 0) {
                 const days = Math.floor(distance / (1000 * 60 * 60 * 24));
                 const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                document.getElementById("countdown").textContent =
-                    `${days}T ${hours}H ${minutes}M ${seconds}S`;
-            } else {
-                document.getElementById("countdown").textContent = "Fertig!";
+                document.getElementById("countdown").innerText =
+                    days + "T " + hours + "h " + minutes + "m " + seconds + "s ";
             }
-        }, 1000);
+
+            // Vergangene Zeit seit Startdatum
+            const elapsed = now - startDate;
+            if (elapsed >= 0) {
+                const daysPassed = Math.floor(elapsed / (1000 * 60 * 60 * 24));
+                const hoursPassed = Math.floor((elapsed % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutesPassed = Math.floor((elapsed % (1000 * 60 * 60)) / (1000 * 60));
+                const secondsPassed = Math.floor((elapsed % (1000 * 60)) / 1000);
+                document.getElementById("elapsed").innerText =
+                    "Seit 1.1.25 (12:00): " +
+                    daysPassed + "T " + hoursPassed + "h " + minutesPassed + "m " + secondsPassed + "s ";
+            }
+        }
+        
+        // Beim Laden sofort berechnen
+        updateTimers();
+        // Alle 1 Sekunde aktualisieren
+        setInterval(updateTimers, 1000);
     </script>
 </body>
 </html>
