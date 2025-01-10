@@ -35,31 +35,31 @@
 
         h1 {
             margin: 20px 0 10px;
-            font-size: 2em;
+            font-size: 2.5em;
             color: var(--primary-color);
         }
 
         p {
-            font-size: 1.5em;
+            font-size: 2em;
             margin-bottom: 20px;
             text-shadow: 1px 1px rgba(0,0,0,0.1);
         }
 
         .timer {
             background: #fff;
-            padding: 20px 30px;
+            padding: 30px 40px;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
+            margin-bottom: 40px;
             width: 90%;
-            max-width: 500px;
+            max-width: 600px;
         }
 
         .flight-container {
             position: relative;
             width: 90%;
-            max-width: 800px;
-            height: 250px;
+            max-width: 1000px;
+            height: 300px;
             background: #fff;
             border-radius: 15px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
@@ -67,11 +67,13 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
+            overflow: hidden;
         }
 
         .airport-emoji {
-            font-size: 3em;
+            font-size: 5em; /* Deutlich größere Flughafensymbole */
+            cursor: default;
             transition: transform 0.3s;
         }
 
@@ -82,8 +84,8 @@
         .flight-path {
             position: relative;
             flex: 1;
-            height: 150px;
-            margin: 0 20px;
+            height: 100%;
+            margin: 0 40px;
         }
 
         .flight-path svg {
@@ -94,28 +96,62 @@
         .flight-path path {
             fill: none;
             stroke: var(--secondary-color);
-            stroke-width: 2;
-            stroke-dasharray: 5,5;
+            stroke-width: 4;
+            stroke-dasharray: 10,10; /* Größere gestrichelte Abstände */
         }
 
         .airplane {
             position: absolute;
             top: 0;
             left: 0;
-            font-size: 2em;
-            transition: transform 1s linear, top 1s linear, left 1s linear;
-            transform: translate(-50%, -50%);
+            font-size: 3em; /* Größeres Flugzeug-Emoji */
+            transition: transform 0.5s linear, top 0.5s linear, left 0.5s linear;
+            transform: translate(-50%, -50%) rotate(0deg);
+            pointer-events: none; /* Flugzeug ist nicht interaktiv */
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            p {
+                font-size: 1.5em;
+            }
+
+            .timer {
+                padding: 20px 30px;
+                max-width: 90%;
+            }
+
             .flight-container {
                 flex-direction: column;
                 height: auto;
+                padding: 20px 10px;
             }
+
             .flight-path {
                 margin: 20px 0;
                 width: 100%;
                 height: 200px;
+            }
+
+            .airport-emoji {
+                font-size: 4em;
+                margin: 0 10px;
+            }
+
+            .flight-path path {
+                stroke-width: 3;
+                stroke-dasharray: 8,8;
+            }
+
+            .airplane {
+                font-size: 2em;
             }
         }
     </style>
@@ -135,7 +171,8 @@
         <span class="airport-emoji">🛫</span>
         <div class="flight-path">
             <svg viewBox="0 0 100 100">
-                <path id="path" d="M 0 100 Q 50 0 100 100" />
+                <!-- Definierte Flugroute von links nach rechts mit einer Kurve nach oben -->
+                <path id="path" d="M 0 60 Q 50 0 100 60" />
             </svg>
             <div class="airplane" id="plane">✈️</div>
         </div>
@@ -204,17 +241,18 @@
             plane.style.left = `${point.x}%`;
             plane.style.top = `${point.y}%`;
 
-            // Optional: Drehe das Flugzeug in die Richtung der Bewegung
-            // Berechne die Tangente an der aktuellen Position
-            const delta = 1; // Kleine Veränderung für die Richtung
-            let nextProgress = progress + (1 / pathLength);
+            // Berechne die Richtung der Bewegung für die Rotation
+            const delta = 0.1; // Kleiner Schritt für die Richtung
+            let nextProgress = progress + (delta / pathLength);
             if (nextProgress > 1) nextProgress = 1;
             const nextPoint = path.getPointAtLength(nextProgress * pathLength);
             const angle = Math.atan2(nextPoint.y - point.y, nextPoint.x - point.x) * (180 / Math.PI);
             plane.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
         }
 
+        // Initiale Position setzen
         movePlane();
+        // Flugzeug alle 1 Sekunde bewegen
         setInterval(movePlane, 1000);
     </script>
 </body>
