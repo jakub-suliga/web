@@ -1,61 +1,149 @@
 <!DOCTYPE html>
-<html>
+<html lang="de">
 <head>
     <meta charset="utf-8" />
-    <title>Countdown</title>
-</head>
-<body>
-    <h1>Countdown bis zum Zielflughafen</h1>
-    <p id="countdown"></p>
-
-    <h1>Abwesenheit vom Spatzi</h1>
-    <p id="elapsed"></p>
-
-    <h1>Flugstatus</h1>
-    <div class="flight-container">
-      <span class="airport-emoji">🛬</span>
-      <div class="flight-path">
-        <div class="airplane" id="plane">✈️</div>
-      </div>
-      <span class="airport-emoji">🛬</span>
-    </div>
-
+    <title>Countdown und Flugstatus</title>
+    <!-- Google Fonts Integration -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        #countdown {
-            font-size: 2em;
-            color: #FF4500;
-            font-family: Arial, sans-serif;
-            text-shadow: 1px 1px #000;
+        :root {
+            --primary-color: #4A90E2;
+            --secondary-color: #50E3C2;
+            --background-color: #f0f4f8;
+            --text-color: #333;
+            --accent-color: #FF4500;
+            --success-color: #28a745;
+            --font-family: 'Roboto', sans-serif;
         }
-        #elapsed {
-            font-size: 2em;
-            color: #008000;
-            font-family: Arial, sans-serif;
-            text-shadow: 1px 1px #000;
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
+
+        body {
+            font-family: var(--font-family);
+            background: linear-gradient(135deg, var(--background-color) 0%, #ffffff 100%);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        h1 {
+            margin: 20px 0 10px;
+            font-size: 2em;
+            color: var(--primary-color);
+        }
+
+        p {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px rgba(0,0,0,0.1);
+        }
+
+        .timer {
+            background: #fff;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            width: 90%;
+            max-width: 500px;
+        }
+
         .flight-container {
-          display: flex;
-          align-items: center;
-          justify-content: space-around;
-          margin: 1em 0;
+            position: relative;
+            width: 90%;
+            max-width: 800px;
+            height: 250px;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
         }
+
+        .airport-emoji {
+            font-size: 3em;
+            transition: transform 0.3s;
+        }
+
+        .airport-emoji:hover {
+            transform: scale(1.2);
+        }
+
         .flight-path {
-          position: relative;
-          flex: 1;
-          border-bottom: 2px dashed gray;
-          margin: 0 1em;
-          height: 0;
+            position: relative;
+            flex: 1;
+            height: 150px;
+            margin: 0 20px;
         }
+
+        .flight-path svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .flight-path path {
+            fill: none;
+            stroke: var(--secondary-color);
+            stroke-width: 2;
+            stroke-dasharray: 5,5;
+        }
+
         .airplane {
-          position: absolute;
-          bottom: 0.5em;
-          left: 0%;
-          transform: translateX(-50%);
-          transition: left 0.5s;
-          font-size: 1.5em;
+            position: absolute;
+            top: 0;
+            left: 0;
+            font-size: 2em;
+            transition: transform 1s linear, top 1s linear, left 1s linear;
+            transform: translate(-50%, -50%);
+        }
+
+        @media (max-width: 600px) {
+            .flight-container {
+                flex-direction: column;
+                height: auto;
+            }
+            .flight-path {
+                margin: 20px 0;
+                width: 100%;
+                height: 200px;
+            }
         }
     </style>
+</head>
+<body>
+    <div class="timer">
+        <h1>Countdown bis zum Zielflughafen</h1>
+        <p id="countdown">Lade...</p>
+    </div>
+
+    <div class="timer">
+        <h1>Abwesenheit vom Spatzi</h1>
+        <p id="elapsed">Lade...</p>
+    </div>
+
+    <div class="flight-container">
+        <span class="airport-emoji">🛫</span>
+        <div class="flight-path">
+            <svg viewBox="0 0 100 100">
+                <path id="path" d="M 0 100 Q 50 0 100 100" />
+            </svg>
+            <div class="airplane" id="plane">✈️</div>
+        </div>
+        <span class="airport-emoji">🛬</span>
+    </div>
+
     <script>
+        // Timer-Funktionen
         const startDate = new Date("Jan 1, 2025 12:00:00").getTime();
         const endDate = new Date("Mar 26, 2025 06:30:00").getTime();
         
@@ -70,7 +158,9 @@
                 const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((distance % (1000 * 60)) / 1000);
                 document.getElementById("countdown").innerText =
-                    days + "T " + hours + "h " + minutes + "m " + seconds + "s ";
+                    `${days}T ${hours}h ${minutes}m ${seconds}s`;
+            } else {
+                document.getElementById("countdown").innerText = "Der Flug ist gelandet!";
             }
 
             // Vergangene Zeit seit Spatzi-Startdatum
@@ -81,7 +171,9 @@
                 const minutesPassed = Math.floor((elapsed % (1000 * 60 * 60)) / (1000 * 60));
                 const secondsPassed = Math.floor((elapsed % (1000 * 60)) / 1000);
                 document.getElementById("elapsed").innerText =
-                    daysPassed + "T " + hoursPassed + "h " + minutesPassed + "m " + secondsPassed + "s ";
+                    `${daysPassed}T ${hoursPassed}h ${minutesPassed}m ${secondsPassed}s`;
+            } else {
+                document.getElementById("elapsed").innerText = "Startdatum noch nicht erreicht.";
             }
         }
         
@@ -90,17 +182,38 @@
         // Alle 1 Sekunde aktualisieren
         setInterval(updateTimers, 1000);
 
-        const startTS = new Date("Jan 1, 2025 12:00:00").getTime();
-        const endTS   = new Date("Mar 26, 2025 06:30:00").getTime();
+        // Flugzeuganimation entlang des SVG-Pfades
+        const startTS = startDate;
+        const endTS = endDate;
+
         function movePlane() {
-          const now = new Date().getTime();
-          const total = endTS - startTS;
-          const elapsed = now - startTS;
-          let progress = (elapsed / total) * 100;
-          if (progress < 0) progress = 0;
-          if (progress > 100) progress = 100;
-          document.getElementById("plane").style.left = progress + "%";
+            const now = new Date().getTime();
+            const total = endTS - startTS;
+            const elapsed = now - startTS;
+            let progress = elapsed / total;
+            if (progress < 0) progress = 0;
+            if (progress > 1) progress = 1;
+
+            // Berechne die Position entlang des Pfades
+            const path = document.getElementById("path");
+            const plane = document.getElementById("plane");
+            const pathLength = path.getTotalLength();
+            const point = path.getPointAtLength(progress * pathLength);
+
+            // Setze die Position des Flugzeugs
+            plane.style.left = `${point.x}%`;
+            plane.style.top = `${point.y}%`;
+
+            // Optional: Drehe das Flugzeug in die Richtung der Bewegung
+            // Berechne die Tangente an der aktuellen Position
+            const delta = 1; // Kleine Veränderung für die Richtung
+            let nextProgress = progress + (1 / pathLength);
+            if (nextProgress > 1) nextProgress = 1;
+            const nextPoint = path.getPointAtLength(nextProgress * pathLength);
+            const angle = Math.atan2(nextPoint.y - point.y, nextPoint.x - point.x) * (180 / Math.PI);
+            plane.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
         }
+
         movePlane();
         setInterval(movePlane, 1000);
     </script>
