@@ -75,6 +75,7 @@
             font-size: 5em; /* Größere Flughafensymbole */
             cursor: default;
             transition: transform 0.3s;
+            z-index: 1; /* Sicherstellen, dass Emojis über der Flugroute liegen */
         }
 
         .airport-emoji:hover {
@@ -85,7 +86,8 @@
             position: relative;
             flex: 1;
             height: 100%; /* Volle Höhe innerhalb des Containers */
-            margin: 0 40px;
+            /* Entfernt den horizontalen Margin */
+            /* margin: 0 40px; */
         }
 
         .flight-path svg {
@@ -102,12 +104,14 @@
 
         .airplane {
             position: absolute;
-            top: 100px; /* Startposition in der Mitte der Flugroute */
+            /* Startposition angepasst, um am Anfang des Pfades zu beginnen */
+            top: 50%; 
             left: 0%;
             font-size: 3em; /* Größeres Flugzeug-Emoji */
             transition: transform 0.5s linear, top 0.5s linear, left 0.5s linear;
             transform: translate(-50%, -50%) rotate(0deg);
             pointer-events: none; /* Flugzeug ist nicht interaktiv */
+            z-index: 2; /* Über dem Flugpfad */
         }
 
         @media (max-width: 768px) {
@@ -171,8 +175,8 @@
         <span class="airport-emoji">🛫</span>
         <div class="flight-path">
             <svg viewBox="0 0 100 100">
-                <!-- Definierte Flugroute von links nach rechts mit einer Kurve nach oben -->
-                <path id="path" d="M0,100 Q50,0 100,100" />
+                <!-- Angepasste Flugroute von links nach rechts auf halber Höhe -->
+                <path id="path" d="M0,50 Q50,0 100,50" />
             </svg>
             <div class="airplane" id="plane">✈️</div>
         </div>
@@ -238,11 +242,14 @@
             const point = path.getPointAtLength(progress * pathLength);
 
             // Setze die Position des Flugzeugs
-            plane.style.left = `${point.x}%`;
+            // Da das SVG von 0 bis 100 reicht, nutzen wir Prozentwerte
+            plane.style.left = `${progress * 100}%`;
+            // Berechne die y-Position basierend auf der Pfadkurve
+            // Hier normalisieren wir die y-Koordinate von SVG (0-100) auf Prozent
             plane.style.top = `${point.y}%`;
 
             // Berechne die Richtung der Bewegung für die Rotation
-            const delta = 0.1; // Kleiner Schritt für die Richtung
+            const delta = 1; // Kleiner Schritt für die Richtung
             let nextProgress = progress + (delta / pathLength);
             if (nextProgress > 1) nextProgress = 1;
             const nextPoint = path.getPointAtLength(nextProgress * pathLength);
