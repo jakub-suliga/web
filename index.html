@@ -5,147 +5,10 @@
   <title>Spatzi in Thailand</title>
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --primary-color: #4A90E2;
-      --background-color: #f0f4f8;
-      --text-color: #333;
-      --font-family: 'Roboto', sans-serif;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: var(--font-family);
-      background: linear-gradient(135deg, #dff0f8 0%, #ffffff 100%);
-      color: var(--text-color);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
-      min-height: 100vh;
-    }
-
-    h1 {
-      margin: 20px 0 10px;
-      font-size: 2.4rem;
-      color: var(--primary-color);
-      text-align: center;
-    }
-
-    p {
-      font-size: 2rem;
-      margin-bottom: 20px;
-      text-shadow: 1px 1px rgba(0,0,0,0.1);
-      text-align: center;
-    }
-
-    .timer {
-      background: #fff;
-      padding: 30px 40px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      margin-bottom: 40px;
-      width: 90%;
-      max-width: 600px;
-    }
-
-    .flight-container {
-      position: relative; 
-      width: 90%;
-      max-width: 1000px;
-      background: #fff;
-      border-radius: 15px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      padding: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 40px;
-    }
-
-    /* Kleiner Wrapper für Emojis + Label drunter */
-    .nest-block {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      user-select: none;
-    }
-
-    /* Emoji-Stil für Nest + Vogel (links) und Nest (rechts) */
-    .emoji {
-      font-size: 2.8rem;  /* gleiche Größe für stehenden und fliegenden Vogel */
-      cursor: default;
-      transition: transform 0.3s;
-    }
-    .emoji:hover {
-      transform: scale(1.1);
-    }
-
-    /* Beschriftung unter den Emojis */
-    .nest-label {
-      margin-top: 8px;
-      font-size: 1.2rem;
-      color: var(--text-color);
-    }
-
-    /* Unsichtbarer Pfad für fliegenden Vogel */
-    .flight-path {
-      position: relative;
-      flex: 1;
-      height: 200px;
-      margin: 0 20px;
-    }
-    .flight-path svg {
-      width: 100%;
-      height: 100%;
-    }
-    .flight-path path {
-      fill: none;
-      stroke: none; /* nicht sichtbar */
-    }
-
-    /* Fliegender Vogel, bewegt sich auf dem Pfad von rechts nach links */
-    .emoji-bird {
-      position: absolute;
-      font-size: 2.8rem;  /* selbe Größe wie stehender Vogel */
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-      user-select: none;
-    }
-
-    /* Responsiv */
-    @media (max-width: 768px) {
-      .timer {
-        padding: 20px 30px;
-      }
-      .flight-container {
-        flex-direction: column;
-        gap: 20px;
-      }
-      .flight-path {
-        width: 100%;
-        height: 200px;
-        margin: 20px 0;
-      }
-      .emoji {
-        font-size: 2.4rem;
-      }
-      .emoji-bird {
-        font-size: 2.4rem;
-      }
-      .nest-label {
-        font-size: 1rem;
-      }
-    }
-  </style>
+  <!-- Externe CSS-Datei -->
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
   <!-- Countdown bis zum Besuch -->
   <div class="timer">
     <h1>Countdown bis zum Spatzianflug</h1>
@@ -158,119 +21,29 @@
     <p id="elapsed">Lade...</p>
   </div>
 
-  <!-- Links: Vogel links vom Nest (🐦🪹), Rechts: leeres Nest (🪹) -->
-  <!-- Fliegender Vogel im unsichtbaren Pfad, von rechts nach links -->
+  <!-- Flug-Darstellung -->
   <div class="flight-container">
-    
-    <!-- Links: Vogel + Nest, darunter "Thailand" -->
     <div class="nest-block">
       <div class="emoji" aria-label="Vogel links vom Nest">
         🐦🪹
       </div>
       <div class="nest-label">Thailand</div>
     </div>
-
-    <!-- Unsichtbarer Pfad (start = x=100, ende = x=0), 
-         damit Vogel von rechts nach links fliegt -->
     <div class="flight-path">
       <svg viewBox="0 0 100 100">
-        <!-- Bogen: Start (100,70) -> Mitte (50,20) -> Ende (0,70) -->
         <path id="birdPath" d="M100,70 Q50,20 0,70" />
       </svg>
-      <!-- Fliegender Vogel -->
       <div class="emoji-bird" id="bird" aria-label="Fliegender Vogel">🐦</div>
     </div>
-
-    <!-- Rechts: Leeres Nest, darunter "Deutschland" -->
     <div class="nest-block">
       <div class="emoji" aria-label="Leeres Nest">
         🪹
       </div>
       <div class="nest-label">Deutschland</div>
     </div>
-
   </div>
 
-  <script>
-    // Start- und Enddatum
-    const startDate = new Date("Jan 1, 2025 12:00:00").getTime();
-    const endDate   = new Date("Mar 26, 2025 06:30:00").getTime();
-
-    // Timer-Funktion
-    function updateTimers() {
-      const now = Date.now();
-
-      // Countdown
-      const distance = endDate - now;
-      if (distance >= 0) {
-        const d = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const s = Math.floor((distance % (1000 * 60)) / 1000);
-        document.getElementById("countdown").innerText = 
-          `${d}T ${h}h ${m}m ${s}s`;
-      } else {
-        document.getElementById("countdown").innerText = 
-          "Ich bin da! ♥";
-      }
-
-      // Abwesenheit
-      const elapsed = now - startDate;
-      if (elapsed >= 0) {
-        const dd = Math.floor(elapsed / (1000 * 60 * 60 * 24));
-        const hh = Math.floor((elapsed % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const mm = Math.floor((elapsed % (1000 * 60 * 60)) / (1000 * 60));
-        const ss = Math.floor((elapsed % (1000 * 60)) / 1000);
-        document.getElementById("elapsed").innerText = 
-          `${dd}T ${hh}h ${mm}m ${ss}s`;
-      } else {
-        document.getElementById("elapsed").innerText = 
-          "Unsere Trennung hat noch nicht begonnen.";
-      }
-    }
-
-    // Vogel entlang des Pfads bewegen (von rechts nach links)
-    function moveBird() {
-      const now = Date.now();
-      const total   = endDate - startDate;
-      const elapsed = now - startDate;
-      let progress  = elapsed / total;
-
-      // clamp(0..1)
-      if (progress < 0) progress = 0;
-      if (progress > 1) progress = 1;
-
-      const path       = document.getElementById("birdPath");
-      const bird       = document.getElementById("bird");
-      const pathLength = path.getTotalLength();
-
-      // Punkt auf dem Pfad
-      const point = path.getPointAtLength(progress * pathLength);
-
-      // Bird an Koordinaten (x,y) platzieren
-      bird.style.left = point.x + "%";
-      bird.style.top  = point.y + "%";
-
-      // Optional Rotation in Flugrichtung:
-      /*
-      const step = 1;
-      let nextProg = progress + (step / pathLength);
-      if (nextProg > 1) nextProg = 1;
-      const nextPoint = path.getPointAtLength(nextProg * pathLength);
-      const angle = Math.atan2(nextPoint.y - point.y, nextPoint.x - point.x) * (180 / Math.PI);
-      bird.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
-      */
-    }
-
-    // Seite initialisieren
-    updateTimers();
-    moveBird();
-
-    // Jede Sekunde Timer + Vogelposition updaten
-    setInterval(() => {
-      updateTimers();
-      moveBird();
-    }, 1000);
-  </script>
+  <!-- Externe JavaScript-Datei -->
+  <script src="main.js"></script>
 </body>
 </html>
