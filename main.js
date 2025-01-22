@@ -22,8 +22,6 @@ function updateTimers() {
     const mm = Math.floor((elapsed % (1000 * 60 * 60)) / (1000 * 60));
     const ss = Math.floor((elapsed % (1000 * 60)) / 1000);
     document.getElementById("elapsed").innerText = `${dd}T ${hh}h ${mm}m ${ss}s`;
-  } else {
-    document.getElementById("elapsed").innerText = "Unsere Trennung hat noch nicht begonnen.";
   }
 }
 
