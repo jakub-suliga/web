@@ -39,10 +39,30 @@
     </div>
     <div class="flight-path">
       <svg viewBox="0 0 100 100">
-        <!-- Gestrichelte Linie -->
-        <line x1="-1000" y1="70" x2="1000" y2="70" stroke="gray" stroke-width="2" stroke-dasharray="5,5" />
+        <!-- Muster für vertikale Striche -->
+        <defs>
+          <pattern 
+            id="verticalDashes" 
+            patternUnits="userSpaceOnUse" 
+            width="10" 
+            height="10"
+          >
+            <!-- Vertikale Linie in der Mitte des 10px breiten Bereichs -->
+            <line x1="5" y1="0" x2="5" y2="10" stroke="gray" stroke-width="2" />
+          </pattern>
+        </defs>
+
+        <!-- Gestrichelte Linie mit vertikalen „Strichen“ -->
+        <line
+          x1="-1000" y1="70"
+          x2="1000"  y2="70"
+          stroke="url(#verticalDashes)"
+          stroke-width="2"
+          fill="none"
+        />
+
         <!-- Flugpfad -->
-        <path id="birdPath" d="M100,70 Q50,20 0,70" />
+        <path id="birdPath" d="M100,70 Q50,20 0,70" fill="none" stroke="none" />
       </svg>
       <div class="emoji-bird" id="bird" aria-label="Fliegender Vogel">🐦</div>
     </div>
