@@ -1,131 +1,158 @@
 :root {
-    --primary-color: #4A90E2;
-    --background-color: #f0f4f8;
-    --text-color: #333;
-    --font-family: 'Roboto', sans-serif;
-  }
-  
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-  
-  body {
-    font-family: var(--font-family);
-    background: linear-gradient(135deg, #dff0f8 0%, #ffffff 100%);
-    color: var(--text-color);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    min-height: 100vh;
-  }
-  
-  h1 {
-    margin: 20px 0 10px;
-    font-size: 2.4rem;
-    color: var(--primary-color);
-    text-align: center;
-  }
-  
-  p {
-    font-size: 2rem;
-    margin-bottom: 20px;
-    text-shadow: 1px 1px rgba(0, 0, 0, 0.1);
-    text-align: center;
-  }
-  
+  --primary-color: #4A90E2;
+  --background-color: #f0f4f8;
+  --text-color: #333;
+  --font-family: 'Roboto', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background: linear-gradient(135deg, #dff0f8 0%, #ffffff 100%);
+  color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+/* Ecken für die Zeiten */
+.corner {
+  position: absolute;
+  padding: 10px 15px;
+  margin: 10px;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 6px;
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.corner-left {
+  top: 0;
+  left: 0;
+}
+
+.corner-right {
+  top: 0;
+  right: 0;
+}
+
+h1 {
+  margin: 20px 0 10px;
+  font-size: 2.4rem;
+  color: var(--primary-color);
+  text-align: center;
+}
+
+p {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  text-shadow: 1px 1px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* Timer-Boxen */
+.timer {
+  background: #fff;
+  padding: 30px 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 40px;
+  width: 90%;
+  max-width: 600px;
+}
+
+/* Flug-Container */
+.flight-container {
+  position: relative; 
+  width: 90%;
+  max-width: 1000px;
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+
+.nest-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  user-select: none;
+}
+
+.emoji {
+  font-size: 2.8rem;
+  cursor: default;
+  transition: transform 0.3s;
+}
+
+.emoji:hover {
+  transform: scale(1.1);
+}
+
+.nest-label {
+  margin-top: 8px;
+  font-size: 1.2rem;
+  color: var(--text-color);
+}
+
+.flight-path {
+  position: relative;
+  flex: 1;
+  height: 200px;
+  margin: 0 20px;
+}
+
+.flight-path svg {
+  width: 100%;
+  height: 100%;
+}
+
+.flight-path path {
+  fill: none;
+  stroke: none;
+}
+
+/* Vogel, der am Pfad entlang fliegt */
+.emoji-bird {
+  position: absolute;
+  font-size: 2.8rem;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
   .timer {
-    background: #fff;
-    padding: 30px 40px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    margin-bottom: 40px;
-    width: 90%;
-    max-width: 600px;
+    padding: 20px 30px;
   }
-  
   .flight-container {
-    position: relative; 
-    width: 90%;
-    max-width: 1000px;
-    background: #fff;
-    border-radius: 15px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 40px;
-  }
-  
-  .nest-block {
-    display: flex;
     flex-direction: column;
-    align-items: center;
-    user-select: none;
+    gap: 20px;
   }
-  
-  .emoji {
-    font-size: 2.8rem;
-    cursor: default;
-    transition: transform 0.3s;
-  }
-  .emoji:hover {
-    transform: scale(1.1);
-  }
-  
-  .nest-label {
-    margin-top: 8px;
-    font-size: 1.2rem;
-    color: var(--text-color);
-  }
-  
   .flight-path {
-    position: relative;
-    flex: 1;
-    height: 200px;
-    margin: 0 20px;
-  }
-  .flight-path svg {
     width: 100%;
-    height: 100%;
+    height: 200px;
+    margin: 20px 0;
   }
-  .flight-path path {
-    fill: none;
-    stroke: none;
+  .emoji {
+    font-size: 2.4rem;
   }
-  
   .emoji-bird {
-    position: absolute;
-    font-size: 2.8rem;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-    user-select: none;
+    font-size: 2.4rem;
   }
-  
-  @media (max-width: 768px) {
-    .timer {
-      padding: 20px 30px;
-    }
-    .flight-container {
-      flex-direction: column;
-      gap: 20px;
-    }
-    .flight-path {
-      width: 100%;
-      height: 200px;
-      margin: 20px 0;
-    }
-    .emoji {
-      font-size: 2.4rem;
-    }
-    .emoji-bird {
-      font-size: 2.4rem;
-    }
-    .nest-label {
-      font-size: 1rem;
-    }
+  .nest-label {
+    font-size: 1rem;
   }
-  
+}
