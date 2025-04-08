@@ -1,6 +1,6 @@
 /* === Start- und Enddatum === */
 const startDate = new Date("Jan 1, 2025 12:00:00").getTime();
-const endDate = new Date("Mar 26, 2025 06:30:00").getTime();
+const endDate = new Date("May 7, 2025 14:15:00").getTime();
 
 /* === Timer-Funktionen (Countdown und Abwesenheit) === */
 function updateTimers() {
